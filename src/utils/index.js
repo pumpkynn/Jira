@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 // 判断值是否为假值（需要删除的值）
 export const isFalsy = (value) => {
     // 0 不是假值，应该保留
@@ -16,4 +17,23 @@ export const cleanObject = (object) => {
         }
     })
     return result
+}
+
+// 组件挂载时执行一次的自定义 Hook
+export const useMount = (callback) => {
+    useEffect(() => {
+        callback()
+    }, []) 
+}
+export const useDebounce = (value, delay) => {
+    //每次在value变化后，设置一个定时器,说明用户在操作，不希望频繁的请求
+    const [debouncedValue, setDebouncedValue] = useState(value)
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setDebouncedValue(value)
+        }, delay)
+        //每次在value变化后，清除定时器,说明用户停止操作，可以请求了
+        return () =>clearTimeout(timeout)
+    },[value,delay])
+    return debouncedValue
 }
