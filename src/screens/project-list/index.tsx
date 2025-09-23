@@ -3,6 +3,7 @@ import { List } from "./list";
 import {useEffect,useState} from "react";
 import * as qs from "qs";
 import { cleanObject, useMount, useDebounce } from "../../utils/index";
+//我们希望，在静态代码里面，就能发现其中的错误 -> 强类型
 const apiUrl = 'http://localhost:3001'
 export const ProjectListScreen = () =>{
     const [users,setUsers] = useState([])

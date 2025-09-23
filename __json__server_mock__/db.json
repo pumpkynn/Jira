@@ -1,4 +1,15 @@
 {
+  "login": [
+    {
+      "username": "admin",
+      "password": "123456",
+      "token": "123",
+      "user": {
+        "id": "admin",
+        "name": "管理员"
+      }
+    }
+  ],
   "users": [
     {
       "id": 1,
