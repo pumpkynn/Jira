@@ -2,7 +2,7 @@ import React from "react"
 import * as qs from "qs"
 import { cleanObject } from "../../utils/index"
 
-const apiUrl = 'http://localhost:3001'
+const apiUrl = '/api'
 const login = (param:{username:string,password:string}) =>{
         fetch(`${apiUrl}/login`, {
             method: "POST",
