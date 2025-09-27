@@ -3,13 +3,20 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { DevTools, loadServer} from 'jira-dev-tool';
+import { AppProviders } from './context';
+import { DevTools, loadServer } from 'jira-dev-tool';
+
+// 重置 jira-dev-tool 的失败设置
+window.localStorage.removeItem('__jira_failure_rate__');
+window.localStorage.removeItem('__jira_request_fail_config__');
 
 loadServer(() => {
   ReactDOM.render(
     <React.StrictMode>
-      <App />
-      <DevTools />
+      <AppProviders>
+        <App />
+        <DevTools />
+      </AppProviders>
     </React.StrictMode>,
     document.getElementById('root')
   );

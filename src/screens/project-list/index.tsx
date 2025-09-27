@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { SearchPanel } from "./search-panel";
 import { List } from "./list";
 import {useEffect,useState} from "react";
-import * as qs from "qs";
+
 import { cleanObject, useMount, useDebounce } from "../../utils/index";
+import { useHttp } from "../../utils/http";
 //我们希望，在静态代码里面，就能发现其中的错误 -> 强类型
-const apiUrl = '/api'
 export const ProjectListScreen = () =>{
     const [users,setUsers] = useState([])
     const [param, setParam] = useState({
@@ -13,29 +13,30 @@ export const ProjectListScreen = () =>{
         personId: ""
     })
     const debouncedParam = useDebounce(param,2000)
-    const [list,setList] = useState([])
+    const [list,setList] = useState([])  
+    const client = useHttp()
+    
+    // 使用useCallback稳定client函数引用
+    const fetchProjects = useCallback(() => {
+        const cleanParam = cleanObject(debouncedParam)
+        client('projects',{data:cleanParam}).then(setList).catch(error => {
+            console.error('Failed to fetch projects:', error)
+        })
+    }, [debouncedParam, client])
+
+    const fetchUsers = useCallback(() => {
+        client('users').then(setUsers).catch(error => {
+            console.error('Failed to fetch users:', error)
+        })
+    }, [client])
+
 //return返回了一个表单元素，决定了这个组件在页面上显示什么
 useEffect(() =>{
-    const cleanParam = cleanObject(debouncedParam)
-    const queryString = qs.stringify(cleanParam)
-    fetch(`${apiUrl}/projects?${queryString}`).then(async response => {
-        if(response.ok){
-            const data = await response.json()
-            setList(data)
-        }
-    }).catch(error => {
-        console.error('Failed to fetch projects:', error)
-    })
-},[debouncedParam])
+    fetchProjects()
+},[fetchProjects])
 
 useMount(() =>{
-    fetch(`${apiUrl}/users`).then(async response => {
-        if(response.ok){
-            setUsers(await response.json())
-        }
-    }).catch(error => {
-        console.error('Failed to fetch users:', error)
-    })
+    fetchUsers()
 })
     return <div>
         <SearchPanel users={users} param={param} setParam={setParam}/>

@@ -22,8 +22,8 @@ export const cleanObject = <T extends Record<string, unknown>>(object: T): Parti
 // 组件挂载时执行一次的自定义 Hook
 export const useMount = (callback: () => void) => {
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         callback()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []) 
 }
 export const useDebounce = <T>(value: T, delay: number): T => {
