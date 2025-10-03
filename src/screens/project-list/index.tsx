@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import { SearchPanel } from "./search-panel";
 import { List } from "./list";
 import {useEffect,useState} from "react";
+import styled from '@emotion/styled'
 
 import { cleanObject, useMount, useDebounce } from "../../utils/index";
 import { useHttp } from "../../utils/http";
@@ -22,7 +23,7 @@ export const ProjectListScreen = () =>{
         client('projects',{data:cleanParam})
           .then((data) => {
             console.log('projects:', data)
-            setList(data)
+            setList(Array.isArray(data) ? data : [])
           })
           .catch(error => {})
     }, [debouncedParam, client])
@@ -31,7 +32,7 @@ export const ProjectListScreen = () =>{
         client('users')
           .then((data) => {
             console.log('users:', data)
-            setUsers(data)
+            setUsers(Array.isArray(data) ? data : [])
           })
           .catch(error => {
             console.error('Failed to fetch users:', error)
@@ -46,8 +47,12 @@ useEffect(() =>{
 useMount(() =>{
     fetchUsers()
 })
-    return <div>
+    return <Container>
+        <h1>项目列表</h1>
         <SearchPanel users={users} param={param} setParam={setParam}/>
         <List users={users} list={list}/>
-    </div>
+    </Container>
 }
+const Container = styled.div`
+    padding:3.2rem
+`

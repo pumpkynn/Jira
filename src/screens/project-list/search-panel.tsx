@@ -1,6 +1,8 @@
+/**@jsx jsx */
+import {jsx} from '@emotion/react'
 import React from 'react'
 import { Select } from 'antd'
-
+import {Form,Input} from 'antd'
 interface SearchPanelProps {
     users: User[],
     param: {
@@ -24,14 +26,17 @@ export const SearchPanel = ({users,param,setParam}:SearchPanelProps) =>{
 // setParam 是更新状态的函数
 // useState 是React提供的Hook来管理状态
 // 它们都是 React 的 useState Hook 自动生成的，不是我们手动定义的。
-    return <form>
+    return <Form layout="inline" css={{marginBottom:'2rem','>*':''}}>
         {/* setParam(Object.assign({}, param, {name: evt.target.value})) */}
-        <input type="text" 
+        <Form.Item>
+            <Input type="text" 
+            placeholder={'项目名'}
         value={param.name} 
         onChange={evt => setParam({
             ...param,
             name: evt.target.value
         })}/>
+        </Form.Item>
         {/* ...param：展开运算符，复制当前状态的所有属性 */}
         {/* name: evt.target.value：覆盖name属性 */}
         <Select
@@ -50,5 +55,5 @@ export const SearchPanel = ({users,param,setParam}:SearchPanelProps) =>{
             value: String(user.id)
           }))}
         />
-    </form>
+    </Form>
 }

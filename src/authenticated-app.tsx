@@ -3,18 +3,26 @@ import { ProjectListScreen } from "./screens/project-list"
 import { useAuth } from "./context/auth_context"
 import styled from "@emotion/styled"
 import { row } from "./components/lib"
-
+ import {ReactComponent as SoftwareLogo} from "./assets/software-logo.svg"
+import { Dropdown, Button } from "antd"
 export const AuthenticatedApp = () => {
-    const {logout} = useAuth()
+    const {logout,user} = useAuth()
     return <Container>
         <Header between={true}>
              <HeaderLeft gap={true}>
-              <h2>logo</h2>
+                <SoftwareLogo width={'18rem'} color={'rgb(38,132,255)'}/>
               <h2>项目</h2>
               <h2>用户</h2>
             </HeaderLeft>
             <HeaderRight>
-              RIGHT  <button onClick={logout}>退出</button>
+              <Dropdown 
+                menu={{ 
+                  items: [{ key: 'logout', label: <span>退出</span> }],
+                  onClick: ({ key }) => { if (key === 'logout') logout() }
+                }}
+              >
+                <Button type="link">Hi,{user?.name}</Button>
+              </Dropdown>
             </HeaderRight>
           
         </Header>   
@@ -41,8 +49,10 @@ grid-template-areas:
  
 `
 const Header = styled(row)`
+padding: 3.2rem;
 grid-area: header;
-background-color: grey;
+box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+z-index: 1;
 
 `
 const HeaderLeft = styled(row)`
