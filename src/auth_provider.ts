@@ -1,5 +1,5 @@
 import { User } from './screens/project-list/search-panel'
-const apiUrl = process.env.REACT_APP_API_URL
+const apiUrl = process.env.REACT_APP_API_URL?.replace(/\/+$/, '')
 const localStorageKey = '__auth_provider_token__'
 
 export const getToken = () => window.localStorage.getItem(localStorageKey)
@@ -8,7 +8,8 @@ export const handleUserResponse = (user: User) => {
     window.localStorage.setItem(localStorageKey, user.token || '')
 }
 export const login = (data: { username: string, password: string }) => {
-    return fetch(`${apiUrl}/login`, {
+    const url = apiUrl ? `${apiUrl}/login` : `login`
+    return fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -27,7 +28,8 @@ export const login = (data: { username: string, password: string }) => {
     })
 }
 export const register = (data: { username: string, password: string }) => {
-   return fetch(`${apiUrl}/register`, {
+  const url = apiUrl ? `${apiUrl}/register` : `register`
+  return fetch(url, {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Select } from 'antd'
 
 interface SearchPanelProps {
     users: User[],
@@ -33,21 +34,21 @@ export const SearchPanel = ({users,param,setParam}:SearchPanelProps) =>{
         })}/>
         {/* ...param：展开运算符，复制当前状态的所有属性 */}
         {/* name: evt.target.value：覆盖name属性 */}
-        <select value={param.personId || ""}
-        onChange={evt => {
-            const newPersonId = evt.target.value ? Number(evt.target.value) : ""
-            console.log('选择负责人:', evt.target.value, '转换为:', newPersonId)
+        <Select
+          style={{ width: 200, marginLeft: 8 }}
+          placeholder="负责人"
+          allowClear
+          value={param.personId || undefined}
+          onChange={(value) => {
             setParam({
-                ...param,
-                personId: newPersonId.toString()
+              ...param,
+              personId: (value as string) || ""
             })
-        }}>
-            <option value="">负责人</option>
-           {
-            users.map((user: User) => <option key={user.id} value={user.id}>
-                {user.name}
-            </option>)
-           }
-        </select>
+          }}
+          options={users.map((user: User) => ({
+            label: user.name,
+            value: String(user.id)
+          }))}
+        />
     </form>
 }

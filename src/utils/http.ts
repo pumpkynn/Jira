@@ -2,26 +2,32 @@ import * as qs from "qs";
 import * as auth from "../auth_provider";
 import { useAuth } from "../context/auth_context";
 import { useCallback } from "react";
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = process.env.REACT_APP_API_URL?.replace(/\/+$/, "");
 interface Config extends RequestInit {
     token?:string;
     data?:object;
 }
 export const http = async (endpoint:string,{data,token,headers,...customConfig}:Config ={}) =>{
-    const config = {
+    const isGet = (customConfig.method || 'GET').toUpperCase() === 'GET'
+    const normalizedEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint
+    const queryString = isGet && data ? `?${qs.stringify(data)}` : ''
+    const url = apiUrl ? `${apiUrl}/${normalizedEndpoint}${queryString}` : `/${normalizedEndpoint}${queryString}`
+
+    const config: RequestInit = {
         method:'GET',
         headers:{
-            Authorization:token?`Bearer ${token}`: '',
-           'Content-Type':data?'application/json':'',
+            Authorization: token ? `Bearer ${token}` : '',
+            ...(data && !isGet ? {'Content-Type':'application/json'} : {}),
+            ...headers,
         },
         ...customConfig
     }
-    if(config.method.toUpperCase() === 'GET'){
-        endpoint += `?${qs.stringify(data)}`
-    }else{
+
+    if(!isGet && data){
         config.body = JSON.stringify(data)
     }
-return window.fetch(`${apiUrl}/${endpoint}`,config)
+
+return window.fetch(url, config)
 .then(async response => {
     if(response.status === 401){
         await auth.logout()
@@ -38,6 +44,7 @@ return window.fetch(`${apiUrl}/${endpoint}`,config)
 }
 export const useHttp = () =>{
     const {user} = useAuth()
-    return useCallback((...[endpoint,config]:Parameters<typeof http>) => 
-        http(endpoint,{...config,token:user?.token}), [user?.token])
+    return useCallback((...[endpoint,config]:Parameters<typeof http>) => {
+        return http(endpoint,{...config,token:user?.token})
+    }, [user?.token])
 }

@@ -12,22 +12,30 @@ export const ProjectListScreen = () =>{
         name: "",
         personId: ""
     })
-    const debouncedParam = useDebounce(param,2000)
+    const debouncedParam = useDebounce(param,300)
     const [list,setList] = useState([])  
     const client = useHttp()
     
     // 使用useCallback稳定client函数引用
     const fetchProjects = useCallback(() => {
         const cleanParam = cleanObject(debouncedParam)
-        client('projects',{data:cleanParam}).then(setList).catch(error => {
-            console.error('Failed to fetch projects:', error)
-        })
+        client('projects',{data:cleanParam})
+          .then((data) => {
+            console.log('projects:', data)
+            setList(data)
+          })
+          .catch(error => {})
     }, [debouncedParam, client])
 
     const fetchUsers = useCallback(() => {
-        client('users').then(setUsers).catch(error => {
+        client('users')
+          .then((data) => {
+            console.log('users:', data)
+            setUsers(data)
+          })
+          .catch(error => {
             console.error('Failed to fetch users:', error)
-        })
+          })
     }, [client])
 
 //return返回了一个表单元素，决定了这个组件在页面上显示什么

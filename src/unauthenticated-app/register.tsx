@@ -1,15 +1,16 @@
 import React, { useState } from "react"
 import { useAuth } from "../context/auth_context"
-
+import { Form, Input, Button } from "antd"
+import { LongButton } from "./index"
 export const RegisterScreen =() =>{
     const {register} = useAuth()
     const [errorMessage, setErrorMessage] = useState<string>("")
     const [successMessage, setSuccessMessage] = useState<string>("")
     
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-       event.preventDefault()
-       const username = (event.currentTarget.elements[0] as HTMLInputElement).value
-       const password = (event.currentTarget.elements[1] as HTMLInputElement).value
+    const handleSubmit = (values:{username:string, password:string}) => {
+      
+       const username = values.username
+       const password = values.password
        
        if(!username || !password){
            setErrorMessage('用户名和密码不能为空')
@@ -17,31 +18,31 @@ export const RegisterScreen =() =>{
            return
        }
        
-       register({username, password})
+       register(values)
            .then(() => {
                setSuccessMessage('注册成功')
                setErrorMessage("")
-               console.log('注册成功')
+               
            })
            .catch((error: Error) => {
                setErrorMessage(error.message || '注册失败')
                setSuccessMessage("")
-               console.error('注册失败:', error)
+               
            })
     }
     
-    return <form onSubmit={handleSubmit}>
+    return <Form onFinish={handleSubmit}>
       
-        <div>
-            <label htmlFor="username">用户名</label>
-            <input type="text" id="username" />
-        </div>
-        <div>
-            <label htmlFor="password">密码</label>
-            <input type="password" id="password" />
-        </div>
-        <button type="submit">注册</button>
+        <Form.Item  name={'username'} rules={[{required: true, message: '请输入用户名'}]}>
+            <Input type="text" id="username" placeholder="用户名"/>
+        </Form.Item>
+        <Form.Item name={'password'} rules={[{required: true, message: '请输入密码'}]}>
+            <Input type="password" id="password" placeholder="密码"/>
+        </Form.Item>
+        <Form.Item style={{ textAlign: 'center' }}>
+            <LongButton type={'primary'} htmlType={'submit'}>注册</LongButton>
+        </Form.Item>
         {errorMessage && <div style={{color: 'red', marginTop: 8}}>{errorMessage}</div>}
         {successMessage && <div style={{color: 'green', marginTop: 8}}>{successMessage}</div>}
-    </form>
+    </Form>
 }
