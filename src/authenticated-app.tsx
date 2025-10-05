@@ -66,6 +66,7 @@ const HeaderRight = styled.div`
 `
 const Main = styled.main`
 grid-area: main;
+
 `
 const Footer = styled.footer`
 grid-area: footer;
