@@ -3,13 +3,15 @@ import { useAsync } from "./use-async"
 import {useEffect} from "react"
 import { cleanObject } from "./index"
 import { useHttp } from "./http"
+import {http} from "./http"
 
 
 export const useProjects = (param?: Partial<Project>) => {
-const{run,...result} = useAsync<Project[]>()
     const client = useHttp()
+    const {run, ...result} = useAsync<Project[]>()
+
     useEffect(() => {
-        run(client('projects',{data:cleanObject(param)}))
-    }, [param,run,client])
-    return result
+        run(client("projects",{data: cleanObject(param)}))
+    },[param])
+    return result;
 }

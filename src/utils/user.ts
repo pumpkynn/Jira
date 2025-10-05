@@ -3,7 +3,7 @@ import { useAsync } from "./use-async"
 import { useEffect } from "react"
 import { cleanObject } from "./index"
 import { useHttp } from "./http"
-export const useUsers = (param :Partial<User>) => {
+export const useUsers = (param ?:Partial<User>) => {
     const client = useHttp()
     const {run,...result} = useAsync<User[]>()
     useEffect(() => {
