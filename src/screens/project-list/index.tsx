@@ -7,6 +7,7 @@ import { Typography } from "antd"
 import {useDebounce } from "../../utils/index";
 import { useProjects } from "../../utils/project";
 import { useUsers } from "../../utils/user";
+import { useDocumentTitle } from "../../utils/index";
 //我们希望，在静态代码里面，就能发现其中的错误 -> 强类型
 export const ProjectListScreen = () =>{
     const [param, setParam] = useState({
@@ -18,6 +19,8 @@ export const ProjectListScreen = () =>{
     const {data:users} = useUsers()
     // 使用useCallback稳定client函数引用
 //return返回了一个表单元素，决定了这个组件在页面上显示什么
+
+useDocumentTitle('项目列表',false)
     return <Container>
         <h1>项目列表</h1>
        <div style={{ marginBottom: 16 }}>
