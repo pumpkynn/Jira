@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import {useRef} from "react"
 // 判断值是否为假值（需要删除的值）
 export const isFalsy = (value: unknown): boolean => {
     // 0 不是假值，应该保留
@@ -39,7 +40,9 @@ export const useDebounce = <T>(value: T, delay: number): T => {
     return debouncedValue
 }
 export const useDocumentTitle = (title: string,keepOnUnmount: boolean = true) => {
-    const oldTitle = document.title
+    const oldTitle = useRef(document.title).current
+    //页面加载时：旧title
+    //页面卸载时：新title
     useEffect(() =>{
         document.title = title
     },[title])
@@ -49,5 +52,5 @@ export const useDocumentTitle = (title: string,keepOnUnmount: boolean = true) =>
                 document.title = oldTitle
             }
         }
-    },[])
+    },[keepOnUnmount,oldTitle])
 }
