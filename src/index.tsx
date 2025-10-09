@@ -13,6 +13,12 @@ import { StyleProvider } from '@ant-design/cssinjs';
 window.localStorage.removeItem('__jira_failure_rate__');
 window.localStorage.removeItem('__jira_request_fail_config__');
 
+// 启动 MSW mock 服务器
+if (process.env.NODE_ENV === 'development') {
+  const { worker } = require('./mocks/browser');
+  worker.start();
+}
+
 loadServer(() => {
   ReactDOM.render(
     <React.StrictMode>

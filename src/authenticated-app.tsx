@@ -5,14 +5,37 @@ import styled from "@emotion/styled"
 import { row } from "./components/lib"
  import {ReactComponent as SoftwareLogo} from "./assets/software-logo.svg"
 import { Dropdown, Button } from "antd"
+import { Route,Routes ,Navigate} from "react-router"
+import { ProjectScreen } from "./screens/project/index"
+import {BrowserRouter as Router } from "react-router-dom"
+import { resetRoute } from "./utils"
 export const AuthenticatedApp = () => {
-    const {logout,user} = useAuth()
+   
     
     return <Container>
-      
-        <Header between={true}>
+       <PageHeader />
+        <Main>
+           <Router>
+  <Routes>
+    <Route path="/projects" element={<ProjectListScreen />} />
+    <Route path="/projects/:projectId/*" element={<ProjectScreen />} />
+    <Route element={<Navigate to="/projects"  />} />
+  </Routes>
+  </Router>
+        </Main>  
+        <Footer>
+            footer
+        </Footer>
+       
+    </Container>
+}
+
+const PageHeader = () => {
+  const {logout,user} = useAuth()
+    return   <Header between={true}>
              <HeaderLeft gap={true}>
-                <SoftwareLogo width={'18rem'} color={'rgb(38,132,255)'}/>
+              <Button type="link" onClick={resetRoute}> <SoftwareLogo width={'18rem'} color={'rgb(38,132,255)'}/></Button>
+               
               <h2>项目</h2>
               <h2>用户</h2>
             </HeaderLeft>
@@ -26,19 +49,9 @@ export const AuthenticatedApp = () => {
                 <Button type="link">Hi,{user?.name}</Button>
               </Dropdown>
             </HeaderRight>
-          
+      
         </Header>   
-       
-        <Main>
-            <ProjectListScreen />
-        </Main>  
-        <Footer>
-            footer
-        </Footer>
-       
-    </Container>
 }
-
 const Container = styled.div`
 display: grid;
 grid-template-rows: 6rem 1fr 6rem;
