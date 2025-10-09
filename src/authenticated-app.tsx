@@ -7,7 +7,9 @@ import { row } from "./components/lib"
 import { Dropdown, Button } from "antd"
 export const AuthenticatedApp = () => {
     const {logout,user} = useAuth()
+    
     return <Container>
+      
         <Header between={true}>
              <HeaderLeft gap={true}>
                 <SoftwareLogo width={'18rem'} color={'rgb(38,132,255)'}/>

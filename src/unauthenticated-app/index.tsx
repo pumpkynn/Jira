@@ -13,6 +13,7 @@ export const  UnauthenticatedApp = () => {
     return <Container>
         <Header/>
         <BackgroundImage/>
+       
         <ShadowCard>
             <Title>{isRegister ? '注册' : '登录'}</Title>
             {error ? <Typography.Text type="danger">{error.message}</Typography.Text> : null}
